@@ -9,7 +9,7 @@ info:
 
 lifecycle:
   startup:
-    command: ["python", "/app/app.py"]
+    command: ["/app/classificationbox"]
 
 actions:
   create:
@@ -29,16 +29,17 @@ actions:
       options:
         in: requestBody
         type: map
-      # ngrams:
-      #   type: int
-      #   default: 1
-      #   in: requestBody
-      #   help: The number of word n-grams to generate from a body of text
-      # skipgrams:
-      #   type: int
-      #   default: 0
-      #   in: requestBody
-      #   help: The distance between words from which to generate n-grams (default is 0, no skipping)
+        # attributes:
+        #   ngrams:
+        #     type: int
+        #     default: 1
+        #     in: requestBody
+        #     help: The number of word n-grams to generate from a body of text
+        #   skipgrams:
+        #     type: int
+        #     default: 0
+        #     in: requestBody
+        #     help: The distance between words from which to generate n-grams (default is 0, no skipping)
       classes:
         in: requestBody
         type: list
@@ -109,7 +110,7 @@ actions:
         #       help: The value of this feature as it relates to the class
     output:
       type: boolean
-      help: True if the teaching was successful
+      # help: True if the teaching was successful
 
   teachMany:
     http:
@@ -181,3 +182,8 @@ actions:
         #   score:
         #     type: number
         #     help: The score of the prediction
+
+environment:
+  MB_KEY:
+    type: string
+    help: Head over to https://machinebox.io/account to get your key

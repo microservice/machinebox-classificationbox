@@ -1,0 +1,183 @@
+omg: 1
+info:
+  version: 1.0.0
+  title: MachineBox's Classificationbox
+  description: Automatically classify various types of data, such as text, images, structured and unstructured data.
+  license:  # Just the spec is MIT
+    name: MIT
+    url: https://opensource.org/licenses/MIT 
+
+lifecycle:
+  startup:
+    command: ["python", "/app/app.py"]
+
+actions:
+  create:
+    http:
+      method: post
+      path: /classificationbox/models
+      port: 8080
+    arguments:
+      id:
+        type: string
+        in: requestBody
+        help: The ID of the model, if omitted a unique ID will be assigned
+      name:
+        type: string
+        in: requestBody
+        required: true
+      options:
+        in: requestBody
+        type: map
+      # ngrams:
+      #   type: int
+      #   default: 1
+      #   in: requestBody
+      #   help: The number of word n-grams to generate from a body of text
+      # skipgrams:
+      #   type: int
+      #   default: 0
+      #   in: requestBody
+      #   help: The distance between words from which to generate n-grams (default is 0, no skipping)
+      classes:
+        in: requestBody
+        type: list
+        help: Two or more classes that the model will learn
+        required: true
+    output:
+      type: map
+      # properties:
+      #   id:
+      #     type: string
+      #     help: The ID of the model
+      #   name:
+      #     type: string
+      #     help: The name of the model
+      #   classes:
+      #     type: list
+      #     help: The classes of the model
+      #   ngrams:
+      #     type: int
+      #     help: The number of word n-grams to generate from a body of text
+      #   skipgrams:
+      #     type: int
+      #     help: The distance between words from which to generate n-grams (default is 0, no skipping)
+
+  teach:
+    http:
+      method: post
+      path: /classificationbox/models/{id}/teach
+      port: 8080
+    arguments:
+      id:
+        type: string
+        in: path
+        required: true
+        help: The ID of the model
+      class:
+        type: string
+        in: requestBody
+        help: The class that these inputs belong to
+      inputs: &inputs
+        type: list
+        in: requestBody
+        help: List of features to be considered when making the prediction
+        # items:
+        #   type: map
+        #   attributes:
+        #     key:
+        #       type: string
+        #       help: The key of the feature
+        #     type:
+        #       type: enum
+        #       help: The type of this feature (see Feature types)
+        #       values:
+        #         number:
+        #           help: An integer or floating point number (e.g. likes, age, size)
+        #         text:
+        #           help: A blob of text that will broken down into tokens (e.g. body of an article)
+        #         keyword:
+        #           help: A string value that will not be tokenized (e.g. cities, authors)
+        #         list:
+        #           help: A comma separated list of keywords (e.g. visit history articleA,articleB,articleC,...)
+        #         image_url:
+        #           help: The URL to an image (which will be downloaded by Classificationbox)
+        #         image_base64:
+        #           help: A string containing the base64 encoded image data
+        #     value:
+        #       type: string
+        #       help: The value of this feature as it relates to the class
+    output:
+      type: boolean
+      help: True if the teaching was successful
+
+  teachMany:
+    http:
+      method: post
+      path: /classificationbox/models/{id}/teach-multi
+      port: 8080
+    arguments:
+      id:
+        type: string
+        in: path
+        required: true
+        help: The ID of the model
+      examples:
+        type: list
+        in: requestBody
+        # item:
+        #   type: map
+        #   atributes:
+        #     class:
+        #       type: string
+        #       in: requestBody
+        #       help: The class that these inputs belong to
+        #     inputs:
+        #       <<: *inputs
+    output:
+      type: boolean
+      # help: True if the teaching was successful
+
+  predict:
+    http:
+      method: post
+      path: /classificationbox/models/{id}/predict
+      port: 8080
+    arguments:
+      id:
+        type: string
+        in: path
+        required: true
+        help: The ID of the model
+      limit:
+        type: int
+        in: requestBody
+        default: 10
+        help: The maximum number of classes to return
+      inputs:
+        type: list
+        in: requestBody
+        help:  List of Feature objects to be considered when making the prediction
+        # items:
+        #   type: map
+          # attributed:
+          #   key:
+          #     type: string
+          #     help: The key of the feature
+          #   type:
+          #     type: string
+          #     help: The type of this feature (see Feature types)
+          #   value:
+          #     type: string
+          #     help: The value of this feature as it relates to the class
+    output:
+      type: list
+      items:
+        type: map
+        # attibuted:
+        #   id:
+        #     type: string
+        #     help: The ID of the class
+        #   score:
+        #     type: number
+        #     help: The score of the prediction

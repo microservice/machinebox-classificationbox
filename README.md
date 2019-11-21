@@ -1,77 +1,168 @@
-# _Machinebox-Classificationbox_ OMG Microservice
+# _MachineBox's Classificationbox_ Open Microservice
 
-[![Open Microservice Guide](https://img.shields.io/badge/OMG%20Enabled-👍-green.svg?)](https://microservice.guide)
-[![Build Status](https://travis-ci.com/omg-services/machinebox-classificationbox.svg?branch=master)](https://travis-ci.com/omg-services/machinebox-classificationbox)
-[![codecov](https://codecov.io/gh/omg-services/machinebox-classificationbox/branch/master/graph/badge.svg)](https://codecov.io/gh/omg-services/machinebox-classificationbox)
+> Automatically classify various types of data, such as text, images, structured and unstructured data.
 
+[![Open Microservice Specification Version](https://img.shields.io/badge/Open%20Microservice-1.0-477bf3.svg)](https://openmicroservices.org) [![Open Microservices Spectrum Chat](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/open-microservices) [![Open Microservices Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](https://github.com/oms-services/.github/blob/master/CODE_OF_CONDUCT.md) [![Open Microservices Commitzen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-An OMG service for machinebox-classificationbox, it lets you use machine learning to automatically classify various types of data, such as text, images, structured and unstructured data.
+## Introduction
 
-## Direct usage in [Storyscript](https://storyscript.io/):
+This project is an example implementation of the [Open Microservice Specification](https://openmicroservices.org), a standard originally created at [Storyscript](https://storyscript.io) for building highly-portable "microservices" that expose the events, actions, and APIs inside containerized software.
 
-##### Create models
-```coffee
-machinebox-classificationbox createModel id:'modelID' name:'modelName' ngram:1 skipgrams:1 classes:'["class1", "class2", "class3"]'
-#result {"id": "ModelID","name": "ModelName","options": {"ModelOptions"},"classes": ["ClassesList"]}
+## Getting Started
+
+The `oms` command-line interface allows you to interact with Open Microservices. If you're interested in creating an Open Microservice the CLI also helps validate, test, and debug your `oms.yml` implementation!
+
+See the [oms-cli](https://github.com/microservices/oms) project to learn more!
+
+### Installation
+
 ```
-##### Teach model
-```coffee
-machinebox-classificationbox teachModel modelId:'modelID' class:'className' inputs:'[{"key": "user_age", "type": "number", "value": "25"},{"key": "user_interests", "type": "list", "value": "music,cooking,ml"},{"key": "user_location", "type": "keyword", "value": "London"}]'
-#result {"success": true,"message": "success","statusCode": 200}
-```
-##### Get Model
-```coffee
-machinebox-classificationbox getModel modelId:'modelID'
-#result {"id": "ModelID","name": "ModelName","options": {"ModelOptions"},"classes": ["ClassesList"]}
-```
-##### Make predictions
-```coffee
-machinebox-classificationbox makePredictions modelId:'modelID' limit:10 inputs:'[{"key": "user_age", "type": "number", "value": "25"},{"key": "user_interests", "type": "list", "value": "music,cooking,ml"},{"key": "user_location", "type": "keyword", "value": "London"}]'
-#result {"classes": [{"id": "class1","score": 0.42109},{"id": "class2","score": 0.293062}]}
-```
-##### Listing models
-```coffee
-machinebox-classificationbox listModels
-#result [{"id":"omg model1","name":"classifationModel1"},{"id":"omg model2","name":"classifationModel2"}]
-```
-##### Deleting models
-```coffee
-machinebox-classificationbox deleteModel modelId:'modelID'
-#result {"success": true, "message": "Model "omg model1" deleted successfully","statusCode": 200}
+npm install -g @microservices/oms
 ```
 
-Curious to [learn more](https://docs.storyscript.io/)?
+## Usage
 
-✨🍰✨
+### Open Microservices CLI Usage
 
-## Usage with [OMG CLI](https://www.npmjs.com/package/omg)
+Once you have the [oms-cli](https://github.com/microservices/oms) installed, you can run any of the following commands from within this project's root directory:
 
-##### Create models
-```shell
-omg run createModel -a id=<MODEL_ID> -a name=<MODEL_NAME> -a ngram=<N-GRAMS> -a skipgrams=<SKIPGRAMS> -a classes=<LIST_OF CLASSES> -e ADDRESS=<SERVER_IP_ADDRESS_WITH_PORT>
-```
-##### Teach model
-```shell
-omg run teachModel -a modelId=<MODEL_ID> -a class=<CLASS_NAME> -a inputs=<LIST_OF_INPUT_FEATURES> -e ADDRESS=<SERVER_IP_ADDRESS_WITH_PORT>
-```
-##### Get Model
-```shell
-omg run getModel -a modelId=<MODEL_ID> -e ADDRESS=<SERVER_IP_ADDRESS_WITH_PORT>
-```
-##### Make predictions
-```shell
-omg run makePredictions -a modelId=<MODEL_ID> -a limit=<LIMIT> -a inputs=<LIST_OF_INPUT_FEATURES> -e ADDRESS=<SERVER_IP_ADDRESS_WITH_PORT>
-```
-##### Listing models
-```shell
-omg run listModels -e ADDRESS=<SERVER_IP_ADDRESS_WITH_PORT>
-```
-##### Deleting models
-```shell
-omg run deleteModel -a modelId=<MODEL_ID> -e ADDRESS=<SERVER_IP_ADDRESS_WITH_PORT>
+#### Actions
+
+##### createModel
+
+> Analyze text with its sentiment and keywords.
+##### Action Arguments
+
+| Argument Name | Type | Required | Default | Description |
+|:------------- |:---- |:-------- |:--------|:----------- |
+| id | `string` | `false` | None | The model ID, if omitted a unique ID will be assigned. |
+| name | `string` | `true` | None | The name of the model. |
+| ngram | `int` | `false` | None | The number of word n-grams to generate from a body of text (default is 1). |
+| skipgrams | `int` | `false` | None | The distance between words from which to generate n-grams (default is 0, no skipping). |
+| classes | `list` | `true` | None | Two or more classes that the model will learn. |
+| ADDRESS | `string` | `true` | None | The server IP address. |
+| MB_KEY | `string` | `false` | None | Head over to https://machinebox.io/account to get your key |
+
+``` shell
+oms run createModel \ 
+    -a id='*****' \ 
+    -a name='*****' \ 
+    -a ngram='*****' \ 
+    -a skipgrams='*****' \ 
+    -a classes='*****' \ 
+    -e ADDRESS=$ADDRESS \ 
+    -e MB_KEY=$MB_KEY
 ```
 
-**Note**: The OMG CLI requires [Docker](https://docs.docker.com/install/) to be installed.
+##### teachModel
 
-## License
-[MIT License](https://github.com/omg-services/machinebox-classificationbox/blob/master/LICENSE).
+> Teach class with feature.
+##### Action Arguments
+
+| Argument Name | Type | Required | Default | Description |
+|:------------- |:---- |:-------- |:--------|:----------- |
+| modelId | `string` | `true` | None | The model ID. |
+| class | `string` | `true` | None | The class that these inputs belong to. |
+| inputs | `list` | `true` | None | The key, type and value of this feature. |
+| ADDRESS | `string` | `true` | None | The server IP address. |
+| MB_KEY | `string` | `false` | None | Head over to https://machinebox.io/account to get your key |
+
+``` shell
+oms run teachModel \ 
+    -a modelId='*****' \ 
+    -a class='*****' \ 
+    -a inputs='*****' \ 
+    -e ADDRESS=$ADDRESS \ 
+    -e MB_KEY=$MB_KEY
+```
+
+##### getModel
+
+> Get model by ID.
+##### Action Arguments
+
+| Argument Name | Type | Required | Default | Description |
+|:------------- |:---- |:-------- |:--------|:----------- |
+| modelId | `string` | `true` | None | The model ID to get details. |
+| ADDRESS | `string` | `true` | None | The server IP address. |
+| MB_KEY | `string` | `false` | None | Head over to https://machinebox.io/account to get your key |
+
+``` shell
+oms run getModel \ 
+    -a modelId='*****' \ 
+    -e ADDRESS=$ADDRESS \ 
+    -e MB_KEY=$MB_KEY
+```
+
+##### makePredictions
+
+> Prepare model for prediction based on a series of input features.
+##### Action Arguments
+
+| Argument Name | Type | Required | Default | Description |
+|:------------- |:---- |:-------- |:--------|:----------- |
+| modelId | `string` | `true` | None | The model ID. |
+| limit | `int` | `true` | None | The maximum number of classes to return (default is 10). |
+| inputs | `list` | `true` | None | Input features are properties that the model should consider when deciding which class they belong in. |
+| ADDRESS | `string` | `true` | None | The server IP address. |
+| MB_KEY | `string` | `false` | None | Head over to https://machinebox.io/account to get your key |
+
+``` shell
+oms run makePredictions \ 
+    -a modelId='*****' \ 
+    -a limit='*****' \ 
+    -a inputs='*****' \ 
+    -e ADDRESS=$ADDRESS \ 
+    -e MB_KEY=$MB_KEY
+```
+
+##### listModels
+
+> List all models from classificationbox..
+##### Action Arguments
+
+| Argument Name | Type | Required | Default | Description |
+|:------------- |:---- |:-------- |:--------|:----------- |
+| ADDRESS | `string` | `true` | None | The server IP address. |
+| MB_KEY | `string` | `false` | None | Head over to https://machinebox.io/account to get your key |
+
+``` shell
+oms run listModels \ 
+    -e ADDRESS=$ADDRESS \ 
+    -e MB_KEY=$MB_KEY
+```
+
+##### deleteModel
+
+> Delete model by ID from classificationbox.
+##### Action Arguments
+
+| Argument Name | Type | Required | Default | Description |
+|:------------- |:---- |:-------- |:--------|:----------- |
+| modelId | `string` | `true` | None | The model ID to delete. |
+| ADDRESS | `string` | `true` | None | The server IP address. |
+| MB_KEY | `string` | `false` | None | Head over to https://machinebox.io/account to get your key |
+
+``` shell
+oms run deleteModel \ 
+    -a modelId='*****' \ 
+    -e ADDRESS=$ADDRESS \ 
+    -e MB_KEY=$MB_KEY
+```
+
+## Contributing
+
+All suggestions in how to improve the specification and this guide are very welcome. Feel free share your thoughts in the Issue tracker, or even better, fork the repository to implement your own ideas and submit a pull request.
+
+[![Edit machinebox-classificationbox on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/oms-services/machinebox-classificationbox)
+
+This project is guided by [Contributor Covenant](https://github.com/oms-services/.github/blob/master/CODE_OF_CONDUCT.md). Please read out full [Contribution Guidelines](https://github.com/oms-services/.github/blob/master/CONTRIBUTING.md).
+
+## Additional Resources
+
+* [Install the CLI](https://github.com/microservices/oms) - The OMS CLI helps developers create, test, validate, and build microservices.
+* [Example OMS Services](https://github.com/oms-services) - Examples of OMS-compliant services written in a variety of languages.
+* [Example Language Implementations](https://github.com/microservices) - Find tooling & language implementations in Node, Python, Scala, Java, Clojure.
+* [Storyscript Hub](https://hub.storyscript.io) - A public registry of OMS services.
+* [Community Chat](https://spectrum.chat/open-microservices) - Have ideas? Questions? Join us on Spectrum.

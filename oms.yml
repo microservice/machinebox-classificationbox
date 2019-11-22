@@ -30,7 +30,7 @@ actions:
         in: requestBody
         required: true
         help: The name of the model.
-      ngram:
+      ngrams:
         type: int
         in: requestBody
         help: The number of word n-grams to generate from a body of text (default is 1).

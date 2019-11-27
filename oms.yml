@@ -1,17 +1,21 @@
 oms: 1
-
-lifecycle:
-  startup:
-    command: ['machinebox-classificationbox']
-
 info:
   version: 1.0.0
   title: MachineBox's Classificationbox
-  description: Automatically classify various types of data, such as text, images, structured and unstructured data.
-  license: # Just the spec is MIT
+  description: >-
+    Automatically classify various types of data, such as text, images,
+    structured and unstructured data.
+  license:
     name: MIT
-    url: https://opensource.org/licenses/MIT
-
+    url: 'https://opensource.org/licenses/MIT'
+  contact:
+    name: Open Microservices
+    url: 'https://openmicroservices.org'
+    email: core@openmicroservices.org
+lifecycle:
+  startup:
+    command:
+      - machinebox-classificationbox
 actions:
   createModel:
     help: Analyze text with its sentiment and keywords.
@@ -24,7 +28,7 @@ actions:
       id:
         type: string
         in: requestBody
-        help: The model ID, if omitted a unique ID will be assigned.
+        help: 'The model ID, if omitted a unique ID will be assigned.'
       name:
         type: string
         in: requestBody
@@ -33,11 +37,15 @@ actions:
       ngrams:
         type: int
         in: requestBody
-        help: The number of word n-grams to generate from a body of text (default is 1).
+        help: >-
+          The number of word n-grams to generate from a body of text (default is
+          1).
       skipgrams:
         type: int
         in: requestBody
-        help: The distance between words from which to generate n-grams (default is 0, no skipping).
+        help: >-
+          The distance between words from which to generate n-grams (default is
+          0, no skipping).
       classes:
         type: list
         in: requestBody
@@ -68,7 +76,7 @@ actions:
         type: list
         in: requestBody
         required: true
-        help: The key, type and value of this feature.
+        help: 'The key, type and value of this feature.'
     output:
       type: map
       contentType: application/json
@@ -110,7 +118,9 @@ actions:
         type: list
         in: requestBody
         required: true
-        help: Input features are properties that the model should consider when deciding which class they belong in.
+        help: >-
+          Input features are properties that the model should consider when
+          deciding which class they belong in.
     output:
       type: map
       contentType: application/json
@@ -147,4 +157,4 @@ environment:
     help: The server IP address.
   MB_KEY:
     type: string
-    help: Head over to https://machinebox.io/account to get your key
+    help: 'Head over to https://machinebox.io/account to get your key'
